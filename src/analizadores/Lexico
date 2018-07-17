@@ -1,0 +1,66 @@
+/*
+ * Ejemplo desarrollado por Erick Navarro
+ * Blog: e-navarro.blogspot.com
+ * Septiembre - 2015
+ */
+
+package analizadores;
+import java_cup.runtime.Symbol; 
+
+%% 
+%class Lexico
+%public 
+%line 
+%char 
+%cup 
+%unicode
+%ignorecase
+
+%init{ 
+    yyline = 1; 
+    yychar = 1; 
+%init} 
+ 
+BLANCOS=[ \r\t]+
+CADENACOMILLASDOBLES = [\"]([^\"\n]|(\\\"))*[\"]
+D=[0-9]+
+DD=[0-9]+("."[  |0-9]+)?
+ID=[A-Za-z]+["_"0-9A-Za-z]*
+COMENTUNILINEA =("//".*\r\n)|("//".*\n)|("//".*\r)
+COMENTMULTILINEA ="/*""/"*([^*/]|[^*]"/"|"*"[^/])*"*"*"*/"
+%%
+
+{COMENTUNILINEA} {} 
+{COMENTMULTILINEA} {}  
+{CADENACOMILLASDOBLES} {return new Symbol(sym.CADENA,yyline,yychar, (yytext()).substring(1,yytext().length()-1));} 
+
+"imprimir" {return new Symbol(sym.RIMPRIMIR,yyline,yychar, yytext());} 
+"numero" {return new Symbol(sym.RNUMERO,yyline,yychar, yytext());} 
+"mientras" {return new Symbol(sym.RMIENTRAS,yyline,yychar, yytext());} 
+"if" {return new Symbol(sym.RIF,yyline,yychar, yytext());} 
+"else" {return new Symbol(sym.RELSE,yyline,yychar, yytext());} 
+
+";" {return new Symbol(sym.PTCOMA,yyline,yychar, yytext());} 
+"{" {return new Symbol(sym.LLAVIZQ,yyline,yychar, yytext());} 
+"}" {return new Symbol(sym.LLAVDER,yyline,yychar, yytext());} 
+"(" {return new Symbol(sym.PARIZQ,yyline,yychar, yytext());} 
+")" {return new Symbol(sym.PARDER,yyline,yychar, yytext());} 
+"+" {return new Symbol(sym.MAS,yyline,yychar, yytext());} 
+"-" {return new Symbol(sym.MENOS,yyline,yychar, yytext());} 
+"*" {return new Symbol(sym.POR,yyline,yychar, yytext());} 
+"/" {return new Symbol(sym.DIVIDIDO,yyline,yychar, yytext());} 
+"&" {return new Symbol(sym.CONCAT,yyline,yychar, yytext());} 
+"<" {return new Symbol(sym.MENQUE,yyline,yychar, yytext());} 
+">" {return new Symbol(sym.MAYQUE,yyline,yychar, yytext());} 
+"=" {return new Symbol(sym.IGUAL,yyline,yychar, yytext());} 
+
+\n {yychar=1;}
+
+{BLANCOS} {} 
+{ID} {return new Symbol(sym.IDENTIFICADOR,yyline,yychar, yytext());} 
+{D} {return new Symbol(sym.ENTERO,yyline,yychar, yytext());} 
+{DD} {return new Symbol(sym.DECIMAL,yyline,yychar, yytext());} 
+
+. {
+    System.err.println("Este es un error lexico: "+yytext()+", en la linea: "+yyline+", en la columna: "+yychar);
+}

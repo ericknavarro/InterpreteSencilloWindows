@@ -1,0 +1,116 @@
+/*
+ * Ejemplo desarrollado por Erick Navarro
+ * Blog: e-navarro.blogspot.com
+ * Septiembre - 2015
+ */
+
+package analizadores; 
+
+import arbol.Asignacion;
+import arbol.Declaracion;
+import arbol.Imprimir;
+import arbol.If;
+import arbol.Instruccion;
+import arbol.Mientras;
+import arbol.Operacion;
+import arbol.Simbolo.Tipo;
+import arbol.TablaDeSimbolos;
+import java.util.LinkedList;
+import java_cup.runtime.*;
+
+parser code 
+{:
+    /**
+     * Variable en la que se almacena el arbol de sintaxis abstracta que se 
+     * genera luego del analisis sintáctico.
+     */
+    public LinkedList<Instruccion> AST;
+    /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/ 
+    public void syntax_error(Symbol s){ 
+            System.err.println("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
+    } 
+    /**
+     * Método al que se llama en el momento en que ya no es posible una recuperación de errores.
+     **/ 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+            System.err.println("Error síntactico irrecuperable en la Línea " + (s.left)+ " Columna "+s.right+". Componente " + s.value + " no reconocido."); 
+    }  
+    /**
+     * Método que devuelve el AST que se generó después de realizar el análisis sintáctico. 
+     * @return árbol de sintaxis abstacta que será utilizado posteriormente en la ejecución.
+     */
+    public LinkedList<Instruccion> getAST() {
+        return AST;
+    }
+:} 
+
+terminal String PTCOMA,PARIZQ,PARDER,LLAVIZQ,LLAVDER;
+terminal String MAS,MENOS,POR,DIVIDIDO,CONCAT;
+terminal String MENQUE,MAYQUE;
+terminal String ENTERO;
+terminal String DECIMAL;
+terminal String CADENA;
+terminal String UMENOS;
+terminal String RIMPRIMIR, RMIENTRAS,RNUMERO,RIF,RELSE;
+terminal String IGUAL;
+terminal String IDENTIFICADOR;
+
+non terminal ini;
+non terminal LinkedList<Instruccion> instrucciones;
+non terminal Instruccion instruccion;
+non terminal Operacion expresion_numerica;
+non terminal Operacion expresion_cadena;
+non terminal Operacion expresion_logica;
+precedence left CONCAT;
+precedence left MAS,MENOS;
+precedence left POR,DIVIDIDO;
+precedence right UMENOS; 
+
+start with ini; 
+
+ini::=instrucciones:a{:
+    //se guarda el AST, que es la lista principal de instrucciones en la variable
+    //AST que se definió dentro del parser
+    parser.AST=a;
+:}
+;
+
+instrucciones ::= 
+   instrucciones:a instruccion:b{:RESULT=a; RESULT.add(b);:}
+ | instruccion:a{:RESULT=new LinkedList<>(); RESULT.add(a);:}
+; 
+
+instruccion ::= 
+   RIMPRIMIR PARIZQ expresion_cadena:a PARDER PTCOMA                          {:RESULT=new Imprimir(a);:}
+ | RMIENTRAS PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER {:RESULT=new Mientras(a,b);:}
+ | RNUMERO IDENTIFICADOR:a PTCOMA                                             {:RESULT=new Declaracion(a,Tipo.NUMERO);:}
+ | IDENTIFICADOR:a IGUAL expresion_numerica:b PTCOMA                          {:RESULT=new Asignacion(a,b);:}
+ | RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER       {:RESULT=new If(a,b);:}
+ | RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER  RELSE LLAVIZQ instrucciones:c LLAVDER {:RESULT=new If(a,b,c);:}
+ | error
+;
+
+expresion_numerica  ::= 
+    MENOS expresion_numerica:a                               {:RESULT=new Operacion(a,Operacion.Tipo_operacion.NEGATIVO);:}%prec UMENOS     
+ |  expresion_numerica:a MAS        expresion_numerica:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.SUMA);:}
+ |  expresion_numerica:a MENOS      expresion_numerica:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.RESTA);:}
+ |  expresion_numerica:a POR        expresion_numerica:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.MULTIPLICACION);:}
+ |  expresion_numerica:a DIVIDIDO   expresion_numerica:b     {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.DIVISION);:}
+ |  PARIZQ expresion_numerica:a PARDER                       {:RESULT=a;:}
+ |  ENTERO:a                                                 {:RESULT=new Operacion(new Double(a));:}
+ |  DECIMAL:a                                                {:RESULT=new Operacion(new Double(a));:}
+ |  IDENTIFICADOR: a                                         {:RESULT=new Operacion(a,Operacion.Tipo_operacion.IDENTIFICADOR);:}
+;
+
+expresion_cadena::=
+    expresion_cadena:a CONCAT expresion_cadena:b {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.CONCATENACION);:}
+ |  CADENA:a                                     {:RESULT=new Operacion(a,Operacion.Tipo_operacion.CADENA);:}
+ |  expresion_numerica:a                         {:RESULT=a;:}
+;
+
+expresion_logica  ::= 
+   expresion_numerica:a  MAYQUE   expresion_numerica:b{:RESULT=new Operacion(a,b, Operacion.Tipo_operacion.MAYOR_QUE);:} 
+ | expresion_numerica:a  MENQUE   expresion_numerica:b{:RESULT=new Operacion(a,b, Operacion.Tipo_operacion.MENOR_QUE);:}  
+;
