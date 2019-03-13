@@ -1,6 +1,7 @@
 Información general:
 * Creado por: Erick Navarro
 * Blog: e-navarro.blogspot.com
+* Medium: https://medium.com/@ericknavarro
 * Julio - 2018
 
 Herramientas utilizadas:
