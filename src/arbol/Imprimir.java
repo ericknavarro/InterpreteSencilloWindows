@@ -6,6 +6,8 @@
 
 package arbol;
 
+import Interfaz.Ventana;
+
 /**
  * Clase que ejecuta las acciones de una instrucción imprimir y que implementa
  * la interfaz de instrucción
@@ -35,6 +37,7 @@ public class Imprimir implements Instruccion{
     @Override
     public Object ejecutar(TablaDeSimbolos ts) {
         System.out.println(contenido.ejecutar(ts).toString());
+        Ventana.ImprimirEnConsola(contenido.ejecutar(ts).toString());
         return null;
     }
     
