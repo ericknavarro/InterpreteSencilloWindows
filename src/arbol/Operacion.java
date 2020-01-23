@@ -23,6 +23,7 @@ public class Operacion implements Instruccion{
         DIVISION,
         NEGATIVO,
         NUMERO,
+        CARACTER,
         IDENTIFICADOR,
         CADENA,
         MAYOR_QUE,
@@ -72,7 +73,7 @@ public class Operacion implements Instruccion{
     /**
      * Constructor para operaciones unarias (un operador), cuyo operador es 
      * específicamente una cadena, estas operaciones son:
-     * IDENTIFICADOR, CADENA
+     * IDENTIFICADOR, CADENA , CARACTER
      * @param a Cadena que representa la operación a realizar
      * @param tipo Tipo de operación
      */
@@ -100,6 +101,7 @@ public class Operacion implements Instruccion{
      */    
     @Override
     public Object ejecutar(TablaDeSimbolos ts) {
+        /* ======== OPERACIONES ARITMETICAS ======== */
         if(tipo== Tipo_operacion.DIVISION){
             return (Double)operadorIzq.ejecutar(ts) / (Double)operadorDer.ejecutar(ts);
         }else if(tipo== Tipo_operacion.MULTIPLICACION){
@@ -110,13 +112,20 @@ public class Operacion implements Instruccion{
             return (Double)operadorIzq.ejecutar(ts) + (Double)operadorDer.ejecutar(ts);
         }else if(tipo== Tipo_operacion.NEGATIVO){
             return (Double)operadorIzq.ejecutar(ts) * -1;
-        }else if(tipo== Tipo_operacion.NUMERO){
+        
+        }
+        /* ======== OPERACIONES UNARIOS ======== */
+        else if(tipo == Tipo_operacion.NUMERO){
             return new Double(valor.toString());
-        }else if(tipo== Tipo_operacion.IDENTIFICADOR){
+        }else if(tipo == Tipo_operacion.IDENTIFICADOR){
             return ts.getValor(valor.toString());
-        }else if(tipo== Tipo_operacion.CADENA){
+        }else if(tipo == Tipo_operacion.CADENA){
             return valor.toString();
-        }else if(tipo== Tipo_operacion.MAYOR_QUE){
+        }else if(tipo == Tipo_operacion.CARACTER){
+            return generarChar();
+        }
+        /* ======== OPERACIONES RELACIONALES ======== */
+        else if(tipo== Tipo_operacion.MAYOR_QUE){
             return ((Double)operadorIzq.ejecutar(ts)).doubleValue()>((Double)operadorDer.ejecutar(ts)).doubleValue();
         }else if(tipo== Tipo_operacion.MENOR_QUE){
             return ((Double)operadorIzq.ejecutar(ts)).doubleValue()<((Double)operadorDer.ejecutar(ts)).doubleValue();
@@ -125,5 +134,27 @@ public class Operacion implements Instruccion{
         }else{
             return null;
         }
-    }    
+    }
+
+    /**
+     * Metodo que obtiene un valor char del Token CARACTER
+     * @return un valor de tipo char obtenido de una cadena
+     */
+    private char generarChar()
+    {
+        String cad = this.valor.toString().substring(1, this.valor.toString().length()-1);
+        switch(cad)
+        {
+            case "\\n":
+                return '\n';
+            case "\\'":
+                return '\'';
+            case "\\\"":
+                return '\"';
+            case "\\\\":
+                return '\\';
+            default:
+                return cad.isEmpty() ? '\0' : cad.charAt(0);
+        }
+    }
 }

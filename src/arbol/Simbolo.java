@@ -52,6 +52,7 @@ public class Simbolo {
      * Enumeración que lista todos los tipos de variable reconocidos en el lenguaje.
      */
     public static enum Tipo{
-        NUMERO
+        NUMERO,
+        CARACTER
     }
 }

@@ -51,9 +51,10 @@ terminal String MAS,MENOS,POR,DIVIDIDO,CONCAT;
 terminal String MENQUE,MAYQUE;
 terminal String ENTERO;
 terminal String DECIMAL;
+terminal String CARACTER;
 terminal String CADENA;
 terminal String UMENOS;
-terminal String RIMPRIMIR, RMIENTRAS,RNUMERO,RIF,RELSE;
+terminal String RIMPRIMIR, RMIENTRAS,RNUMERO,RIF,RELSE,RCARACTER;
 terminal String IGUAL;
 terminal String IDENTIFICADOR;
 
@@ -83,11 +84,12 @@ instrucciones ::=
 ; 
 
 instruccion ::= 
-   RIMPRIMIR PARIZQ expresion_cadena:a PARDER PTCOMA                          {:RESULT=new Imprimir(a);:}
- | RMIENTRAS PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER {:RESULT=new Mientras(a,b);:}
- | RNUMERO IDENTIFICADOR:a PTCOMA                                             {:RESULT=new Declaracion(a,Tipo.NUMERO);:}
- | IDENTIFICADOR:a IGUAL expresion_numerica:b PTCOMA                          {:RESULT=new Asignacion(a,b);:}
- | RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER       {:RESULT=new If(a,b);:}
+   RIMPRIMIR    PARIZQ expresion_cadena:a PARDER PTCOMA                          {:RESULT=new Imprimir(a);:}
+ | RMIENTRAS    PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER {:RESULT=new Mientras(a,b);:}
+ | RNUMERO      IDENTIFICADOR:a PTCOMA                                           {:RESULT=new Declaracion(a,Tipo.NUMERO);:}
+ | RCARACTER    IDENTIFICADOR:a PTCOMA                                           {:RESULT=new Declaracion(a,Tipo.CARACTER);:}
+ | IDENTIFICADOR:a IGUAL expresion_numerica:b PTCOMA                             {:RESULT=new Asignacion(a,b);:}
+ | RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER          {:RESULT=new If(a,b);:}
  | RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER  RELSE LLAVIZQ instrucciones:c LLAVDER {:RESULT=new If(a,b,c);:}
  | error
 ;
@@ -101,6 +103,7 @@ expresion_numerica  ::=
  |  PARIZQ expresion_numerica:a PARDER                       {:RESULT=a;:}
  |  ENTERO:a                                                 {:RESULT=new Operacion(new Double(a));:}
  |  DECIMAL:a                                                {:RESULT=new Operacion(new Double(a));:}
+ |  CARACTER:a                                               {:RESULT=new Operacion(a,Operacion.Tipo_operacion.CARACTER);:} 
  |  IDENTIFICADOR: a                                         {:RESULT=new Operacion(a,Operacion.Tipo_operacion.IDENTIFICADOR);:}
 ;
 
