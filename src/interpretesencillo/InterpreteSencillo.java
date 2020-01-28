@@ -6,14 +6,9 @@
 
 package interpretesencillo;
 
-import Archivo.Leer_Archivo;
-import Interfaz.Ventana;
 import arbol.Instruccion;
 import arbol.TablaDeSimbolos;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.StringReader;
 import java.util.LinkedList;
 
 /**
@@ -27,28 +22,18 @@ public class InterpreteSencillo {
      * @param args los argumentos de la línea de comando
      */
     public static void main(String[] args) {
-        //interpretar("entrada.txt");
-        Ventana v = new Ventana();
-        v.setVisible(true);
+        interpretar("entrada.txt");
     }
-    
     /**
-     * Método que setea el texto recibido del area de texto para ser interpretado.
-     * @param texto texto que se va a interpretar
+     * Método que lee el contenido de un archivo de texto y ejecuta las 
+     * instrucciones que contiene.
+     * @param path ruta del archivo de texto que se desea interpretar
      */
-    public void setTexto(String texto){
-        interpretar(texto);
-    }
-    
-    /**
-     * Método que ejecuta las instrucciones que contiene.
-     * @param cadena texto que se va a interpretar
-     */
-    private static void interpretar(String cadena) {
+    private static void interpretar(String path) {
         analizadores.Sintactico pars;
         LinkedList<Instruccion> AST_arbolSintaxisAbstracta=null;
         try {
-            pars=new analizadores.Sintactico(new analizadores.Lexico(new BufferedReader(new StringReader(cadena))));
+            pars=new analizadores.Sintactico(new analizadores.Lexico(new FileInputStream(path)));
             pars.parse();        
             AST_arbolSintaxisAbstracta=pars.getAST();
         } catch (Exception ex) {
