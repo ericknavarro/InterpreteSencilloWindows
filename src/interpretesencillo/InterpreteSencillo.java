@@ -6,13 +6,10 @@
 
 package interpretesencillo;
 
-import Archivo.Leer_Archivo;
 import Interfaz.Ventana;
 import arbol.Instruccion;
 import arbol.TablaDeSimbolos;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.StringReader;
 import java.util.LinkedList;
 
