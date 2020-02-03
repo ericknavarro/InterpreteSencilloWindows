@@ -23,6 +23,10 @@ public class If implements Instruccion{
      */
     private final LinkedList<Instruccion> listaInstrucciones;
     /**
+     * Lista de instrucciones que serán ejecutadas si la condición ELSE IF se cumple.
+     */
+    private LinkedList<Instruccion> listaElseIfInstrucciones;
+    /**
      * Lista de instrucciones que se ejecutarán si la condición no se cumple,
      * esta lista existirá solo si la instrucción posee la clausula ELSE, de lo
      * contrario la lista será null.
@@ -51,6 +55,20 @@ public class If implements Instruccion{
         listaInsElse=c;
     }
     /**
+     * Tercer constructor de la clase, este se utiliza cuando la instrucción tiene
+     * clausula IF (ELSE IF/ ELSE).
+     * @param a Condición del si..entonces
+     * @param b Lista de instrucciones que deberían ejecutarse si la condición se cumple
+     * @param l Lista de instrucciones que deberían ejecutarse si la condición ElSE IF se cumple
+     * @param c Lista de instrucciones que deberían ejecutarse si la condición no se cumple
+     */
+    public If(Operacion a, LinkedList<Instruccion> b, LinkedList<Instruccion> l, LinkedList<Instruccion> c) {
+        condicion=a;
+        listaInstrucciones=b;
+        listaElseIfInstrucciones = l;
+        listaInsElse=c;
+    }
+    /**
      * Método que ejecuta la instrucción si..entonces, es una sobreescritura del 
      * método ejecutar que se debe programar por la implementación de la interfaz
      * instrucción
@@ -66,8 +84,18 @@ public class If implements Instruccion{
             for(Instruccion in: listaInstrucciones){
                 in.ejecutar(tablaLocal);
             }
+            return true;
         }else{
-            if(listaInsElse!=null){
+            boolean bandera = false;
+            if(listaElseIfInstrucciones != null){
+                for(Instruccion in: listaElseIfInstrucciones){
+                    if((boolean)in.ejecutar(ts)){
+                        bandera = true;
+                        break;
+                    }
+                }
+            }
+            if(listaInsElse!=null && !bandera){
                 TablaDeSimbolos tablaLocal=new TablaDeSimbolos();
                 tablaLocal.addAll(ts);
                 for(Instruccion in: listaInsElse){
@@ -75,6 +103,6 @@ public class If implements Instruccion{
                 }            
             }
         }
-        return null;
+        return false;
     }
 }
