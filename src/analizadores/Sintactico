@@ -90,6 +90,7 @@ instruccion ::=
  | IDENTIFICADOR:a IGUAL expresion_numerica:b PTCOMA                          {:RESULT=new Asignacion(a,b);:}
  | RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER       {:RESULT=new If(a,b);:}
  | RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER  RELSE LLAVIZQ instrucciones:c LLAVDER {:RESULT=new If(a,b,c);:}
+ | RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER else_ifs:l {:RESULT=new If(a,b,l,null);:} 
  | RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER else_ifs:l RELSE LLAVIZQ instrucciones:c LLAVDER {:RESULT=new If(a,b,l,c);:} 
  | error
 ;
