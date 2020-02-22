@@ -1,4 +1,4 @@
-/******************************************
+﻿/******************************************
  * Ejemplo desarrollado por Erick Navarro *
  * Blog: e-navarro.blogspot.com           *
  * Septiembre - 2015                      *
@@ -34,11 +34,13 @@ imprimir("----------------");
  * dos ciclos while anidados. 
  **/
 mientras(a<4+c){	
-	a=a+1;
+	//a=a+1;
+	a++;
 	numero b;
 	b=0;
 	mientras(b<4+c){
-		b=b+1;
+		//b=b+1;
+		b++;
 		imprimir(a & " * " & b & " = " & a * b);
 	}
 	imprimir("----------------");
@@ -74,3 +76,15 @@ If(a>10){
 }
 
 
+a = 0;
+b = 10;
+
+mientras(a < 10){
+	imprimir("incrementando variable a: " & a);
+	a++;
+}
+
+mientras(b > 0){
+	imprimir("decrementando variable b: " & b);
+	b--;
+}
