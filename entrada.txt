@@ -4,16 +4,6 @@
  * Septiembre - 2015                      *
  ******************************************/
 
- // Manejo de Caracteres
-imprimir("Manejo del valor char");
-imprimir("----------------");
-imprimir('a');
-imprimir('\n');
-caracter mi_char;
-mi_char = 'c';
-imprimir(mi_char);
-imprimir("----------------");
-
  //Se imprime el encabezado
 imprimir("Tablas de" & " multiplicar");
 
@@ -88,3 +78,14 @@ mientras(b > 0){
 	imprimir("decrementando variable b: " & b);
 	b--;
 }
+
+ // Manejo de Caracteres
+imprimir("Manejo del valor char");
+imprimir("----------------");
+imprimir("A continuaciòn viene un caracter: "&'a');
+imprimir('\n');
+caracter mi_char;
+mi_char = 'c';
+imprimir(mi_char);
+imprimir("----------------");
+
