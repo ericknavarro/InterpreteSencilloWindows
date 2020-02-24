@@ -56,12 +56,18 @@ public class InterpreteSencillo {
         TablaDeSimbolos ts=new TablaDeSimbolos();
         //Se ejecuta cada instruccion en el ast, es decir, cada instruccion de 
         //la lista principal de instrucciones.
+        String var;
         for(Instruccion ins:ast){
             //Si existe un error léxico o sintáctico en cierta instrucción esta
             //será inválida y se cargará como null, por lo tanto no deberá ejecutarse
-            //es por esto que se hace esta validación.
-            if(ins!=null)
-                ins.ejecutar(ts);
+            //es por esto que se hace esta validación.            
+            try{
+                if(ins!=null)
+                    ins.ejecutar(ts);
+            }
+            catch(NullPointerException e){
+                break;
+            }
         }
     }
 }

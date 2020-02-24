@@ -38,6 +38,12 @@ public class Declaracion implements Instruccion{
      */
     @Override
     public Object ejecutar(TablaDeSimbolos ts) {
+        for(Simbolo s:ts){
+            if(s.getId().equals(id)){
+                System.out.println("La variable "+id+" ya existe en este ámbito.");
+                return null;
+            }
+        }
         ts.add(new Simbolo(id,tipo));
         return null;
     }
