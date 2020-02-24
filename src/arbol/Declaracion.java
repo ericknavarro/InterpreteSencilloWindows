@@ -6,6 +6,9 @@
 
 package arbol;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+
 /**
  * Clase que ejecuta las acciones de una instrucción de declaración y que implementa
  * la interfaz de instrucción
@@ -15,19 +18,46 @@ public class Declaracion implements Instruccion{
     /**
      * Identificador de la variable que será declarada.
      */
-    private final String id;
+    private final LinkedList<String> id;
     /**
      * Tipo de la variable que será declarada.
      */
     Simbolo.Tipo tipo;
+    private LinkedList<Operacion> nums;
     /**
      * Constructor de la clase
      * @param a Identificador de la variable que será declarada
      * @param t Tipo de la clase que será declarada
      */
-    public Declaracion(String a, Simbolo.Tipo t) {
+    public Declaracion(LinkedList<String> a, String t) {
         id=a;
-        tipo=t;
+        this.tipo = obtenerTipo(t);
+    }
+    
+    public Declaracion(LinkedList<String> a, LinkedList<Operacion> b, String t)
+    {
+        id=a;
+        nums=b;
+        this.tipo = obtenerTipo(t);
+    }
+    
+    
+    public Simbolo.Tipo obtenerTipo(String t)
+    {
+        switch(t)
+        {
+            case "int":
+                return Simbolo.Tipo.INT;
+            case "string":
+                return Simbolo.Tipo.STRING;
+            case "bool":
+                return Simbolo.Tipo.BOOL;
+            case "char":
+                return Simbolo.Tipo.CHAR;
+            default:
+                System.out.println("Error interno, tipo de dato erroneo.");
+                return null;
+        } 
     }
     /**
      * Método que ejecuta la accion de declarar una variable, es una sobreescritura del 
@@ -38,7 +68,24 @@ public class Declaracion implements Instruccion{
      */
     @Override
     public Object ejecutar(TablaDeSimbolos ts) {
-        ts.add(new Simbolo(id,tipo));
+        for(String ids : id)
+        {   
+            if(nums == null)
+            {
+                ts.put(ids,new Simbolo(tipo));
+            }
+            else
+            {
+                LinkedList<Integer> l = new LinkedList<Integer>();
+                for(Operacion op : nums)
+                {
+                    double num = (double)op.ejecutar(ts);
+                    int n = (int) num;
+                    l.add(n);
+                }
+                ts.put(ids,new Simbolo(tipo,l));
+            }
+        }
         return null;
     }
     

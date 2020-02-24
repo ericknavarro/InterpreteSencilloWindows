@@ -27,7 +27,7 @@ public class If implements Instruccion{
      * esta lista existirá solo si la instrucción posee la clausula ELSE, de lo
      * contrario la lista será null.
      */
-    private LinkedList<Instruccion> listaInsElse;
+    private Instruccion insElse;
     /**
      * Primer constructor de la clase, este se utiliza cuando la instrucción no 
      * tiene clausula ELSE.
@@ -45,10 +45,10 @@ public class If implements Instruccion{
      * @param b Lista de instrucciones que deberían ejecutarse si la condición se cumple
      * @param c Lista de instrucciones que deberían ejecutarse si la condición no se cumple
      */
-    public If(Operacion a, LinkedList<Instruccion> b, LinkedList<Instruccion> c) {
+    public If(Operacion a, LinkedList<Instruccion> b, Instruccion c) {
         condicion=a;
         listaInstrucciones=b;
-        listaInsElse=c;
+        insElse=c;
     }
     /**
      * Método que ejecuta la instrucción si..entonces, es una sobreescritura del 
@@ -61,18 +61,13 @@ public class If implements Instruccion{
     @Override
     public Object ejecutar(TablaDeSimbolos ts) {
         if((Boolean)condicion.ejecutar(ts)){
-            TablaDeSimbolos tablaLocal=new TablaDeSimbolos();
-            tablaLocal.addAll(ts);
+            TablaDeSimbolos tablaLocal=new TablaDeSimbolos(ts);
             for(Instruccion in: listaInstrucciones){
                 in.ejecutar(tablaLocal);
             }
         }else{
-            if(listaInsElse!=null){
-                TablaDeSimbolos tablaLocal=new TablaDeSimbolos();
-                tablaLocal.addAll(ts);
-                for(Instruccion in: listaInsElse){
-                    in.ejecutar(tablaLocal);
-                }            
+            if(insElse!=null){
+                insElse.ejecutar(ts);
             }
         }
         return null;

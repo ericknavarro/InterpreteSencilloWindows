@@ -1,8 +1,4 @@
-/*
- * Ejemplo desarrollado por Erick Navarro
- * Blog: e-navarro.blogspot.com
- * Septiembre - 2015
- */
+
 
 package analizadores;
 import java_cup.runtime.Symbol; 
@@ -20,34 +16,43 @@ import java_cup.runtime.Symbol;
     yyline = 1; 
     yychar = 1; 
 %init} 
-
-CARACTER            =   [\']([^\t\'\"\n]|(\\\")|(\\n)|(\\\')|(\\t))?[\']  
+ 
 BLANCOS=[ \r\t]+
 CADENACOMILLASDOBLES = [\"]([^\"\n]|(\\\"))*[\"]
-D=[0-9]+
-DD=[0-9]+("."[  |0-9]+)?
-ID=[A-Za-z]+["_"0-9A-Za-z]*
-COMENTUNILINEA      =   ("//".*\r\n)|("//".*\n)|("//".*\r)
-COMENTMULTILINEA    =   "/*""/"*([^*/]|[^*]"/"|"*"[^/])*"*"*"*/"
-  
+D =[0-9]+
+DD =[0-9]+("."[  |0-9]+)?
+ID =[A-Za-z]+["_"0-9A-Za-z]*
+COMENTUNILINEA =("//".*\r\n)|("//".*\n)|("//".*\r)
+COMENTMULTILINEA ="/*""/"*([^*/]|[^*]"/"|"*"[^/])*"*"*"*/"
+BOOLEANO = "true"|"false"
+CHARAC = ["'"][a-zA-Z]["'"]
 %%
 
 {COMENTUNILINEA} {} 
 {COMENTMULTILINEA} {}  
 {CADENACOMILLASDOBLES} {return new Symbol(sym.CADENA,yyline,yychar, (yytext()).substring(1,yytext().length()-1));} 
+{BOOLEANO} {return new Symbol(sym.BOOLEANO,yyline,yychar, yytext());} 
+{CHARAC} {return new Symbol(sym.CHARAC,yyline,yychar, (yytext()).substring(1,yytext().length()-1));}
 
-"imprimir"          {return new Symbol(sym.RIMPRIMIR,yyline,yychar, yytext());} 
-"numero"            {return new Symbol(sym.RNUMERO,yyline,yychar, yytext());} 
-"mientras"          {return new Symbol(sym.RMIENTRAS,yyline,yychar, yytext());} 
-"if"                {return new Symbol(sym.RIF,yyline,yychar, yytext());} 
-"else"              {return new Symbol(sym.RELSE,yyline,yychar, yytext());}
-"caracter"          {return new Symbol(sym.RCARACTER,yyline,yychar,yytext());} 
+"imprimir" {return new Symbol(sym.RIMPRIMIR,yyline,yychar, yytext());} 
+"imprimirln" {return new Symbol(sym.RIMPRIMIRLN,yyline,yychar, yytext());} 
+"int" {return new Symbol(sym.RINT,yyline,yychar, yytext());} 
+"string" {return new Symbol(sym.RSTRING,yyline,yychar, yytext());} 
+"bool" {return new Symbol(sym.RBOOL,yyline,yychar, yytext());} 
+"char" {return new Symbol(sym.RCHAR,yyline,yychar, yytext());} 
+"mientras" {return new Symbol(sym.RMIENTRAS,yyline,yychar, yytext());} 
+"if" {return new Symbol(sym.RIF,yyline,yychar, yytext());} 
+"else" {return new Symbol(sym.RELSE,yyline,yychar, yytext());} 
+"for" {return new Symbol(sym.RFOR,yyline,yychar, yytext());} 
 
+"," {return new Symbol(sym.COMA,yyline,yychar, yytext());} 
 ";" {return new Symbol(sym.PTCOMA,yyline,yychar, yytext());} 
 "{" {return new Symbol(sym.LLAVIZQ,yyline,yychar, yytext());} 
 "}" {return new Symbol(sym.LLAVDER,yyline,yychar, yytext());} 
 "(" {return new Symbol(sym.PARIZQ,yyline,yychar, yytext());} 
 ")" {return new Symbol(sym.PARDER,yyline,yychar, yytext());} 
+"[" {return new Symbol(sym.CORIZQ,yyline,yychar, yytext());} 
+"]" {return new Symbol(sym.CORDER,yyline,yychar, yytext());} 
 "+" {return new Symbol(sym.MAS,yyline,yychar, yytext());} 
 "-" {return new Symbol(sym.MENOS,yyline,yychar, yytext());} 
 "*" {return new Symbol(sym.POR,yyline,yychar, yytext());} 
@@ -56,17 +61,16 @@ COMENTMULTILINEA    =   "/*""/"*([^*/]|[^*]"/"|"*"[^/])*"*"*"*/"
 "<" {return new Symbol(sym.MENQUE,yyline,yychar, yytext());} 
 ">" {return new Symbol(sym.MAYQUE,yyline,yychar, yytext());} 
 "=" {return new Symbol(sym.IGUAL,yyline,yychar, yytext());} 
-
-"++" {return new Symbol(sym.INCREMENTO,yyline,yychar, yytext());} 
-"--" {return new Symbol(sym.DECREMENTO,yyline,yychar, yytext());} 
+"!" {return new Symbol(sym.DIF,yyline,yychar, yytext());} 
+"&&" {return new Symbol(sym.Y,yyline,yychar, yytext());} 
+"||" {return new Symbol(sym.O,yyline,yychar, yytext());} 
 
 \n {yychar=1;}
 
-{BLANCOS} {}
-{CARACTER}  {return new Symbol(sym.CARACTER,yyline,yychar, yytext());} 
-{ID}        {return new Symbol(sym.IDENTIFICADOR,yyline,yychar, yytext());} 
-{D}         {return new Symbol(sym.ENTERO,yyline,yychar, yytext());} 
-{DD}        {return new Symbol(sym.DECIMAL,yyline,yychar, yytext());}
+{BLANCOS} {} 
+{ID} {return new Symbol(sym.IDENTIFICADOR,yyline,yychar, yytext());} 
+{D} {return new Symbol(sym.ENTERO,yyline,yychar, yytext());} 
+{DD} {return new Symbol(sym.DECIMAL,yyline,yychar, yytext());} 
 
 . {
     System.err.println("Este es un error lexico: "+yytext()+", en la linea: "+yyline+", en la columna: "+yychar);

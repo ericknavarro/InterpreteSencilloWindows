@@ -6,6 +6,8 @@
 
 package arbol;
 
+import java.util.LinkedList;
+
 /**
  * Clase que ejecuta las acciones de una operación, ya sea aritmética o realacional
  * y que implementa la interfaz de instrucción, ya que estas operaciones pueden 
@@ -23,17 +25,26 @@ public class Operacion implements Instruccion{
         DIVISION,
         NEGATIVO,
         NUMERO,
-        CARACTER,
         IDENTIFICADOR,
         CADENA,
+        CHAR,
+        BOOL,
         MAYOR_QUE,
         MENOR_QUE,
-        CONCATENACION
+        MAYOR_IGUAL,
+        MENOR_IGUAL,
+        IGUAL,
+        DIFERENTE,
+        AND,
+        OR,
+        NOT,
+        CONCATENACION,
+        ARREGLO
     }
     /**
      * Tipo de operación a ejecutar.
      */
-    private final Tipo_operacion tipo;
+    private Tipo_operacion tipo;
     /**
      * Operador izquierdo de la operación.
      */
@@ -47,10 +58,12 @@ public class Operacion implements Instruccion{
      * cadena.
      */
     private Object valor;
+    
+    private LinkedList<Operacion> nums;
     /**
      * Constructor de la clase para operaciones binarias (con dos operadores), estas
      * operaciones son:
-     * SUMA, RESTA, MULTIPLICACION, DIVISION, CONCATENACION, MAYOR_QUE, MENOR_QUE
+     * SUMA, RESTA, MULTIPLICACION, DIVISION, CONCATENACION, MAYOR_QUE, MENOR_QUE, IGUAL, MAYOR_IGUAL, MENOR_IGUAL, AND, OR, DIFERENTE
      * @param operadorIzq Operador izquierdo de la operación
      * @param operadorDer Opeardor derecho de la operación
      * @param tipo Tipo de la operación
@@ -62,7 +75,7 @@ public class Operacion implements Instruccion{
     }
     /**
      * Constructor para operaciones unarias (un operador), estas operaciones son:
-     * NEGATIVO
+     * NEGATIVO, NOT
      * @param operadorIzq Único operador de la operación
      * @param tipo Tipo de operación
      */
@@ -73,13 +86,19 @@ public class Operacion implements Instruccion{
     /**
      * Constructor para operaciones unarias (un operador), cuyo operador es 
      * específicamente una cadena, estas operaciones son:
-     * IDENTIFICADOR, CADENA , CARACTER
+     * IDENTIFICADOR, CADENA
      * @param a Cadena que representa la operación a realizar
      * @param tipo Tipo de operación
      */
     public Operacion(String a, Tipo_operacion tipo) {
         this.valor=a;
         this.tipo = tipo;
+    }
+    public Operacion(String a, LinkedList<Operacion> nums, Tipo_operacion tipo)
+    {
+        this.valor=a;
+        this.nums=nums;
+        this.tipo=tipo;
     }
     /**
      * Constructor para operaciones unarias (un operador), cuyo operador es 
@@ -91,6 +110,15 @@ public class Operacion implements Instruccion{
         this.valor=a;
         this.tipo = Tipo_operacion.NUMERO;
     }
+
+    public String getValor(){
+        return (String)valor;
+    }
+    
+    public Tipo_operacion getTipo()
+    {
+        return this.tipo;
+    }
         
     /**
      * Método que ejecuta la instrucción operación, es una sobreescritura del 
@@ -99,62 +127,69 @@ public class Operacion implements Instruccion{
      * @param ts tabla de símbolos del ámbito padre de la sentencia
      * @return Esta instrucción retorna el valor producido por la operación que se ejecutó
      */    
+    
     @Override
     public Object ejecutar(TablaDeSimbolos ts) {
-        /* ======== OPERACIONES ARITMETICAS ======== */
-        if(tipo== Tipo_operacion.DIVISION){
-            return (Double)operadorIzq.ejecutar(ts) / (Double)operadorDer.ejecutar(ts);
-        }else if(tipo== Tipo_operacion.MULTIPLICACION){
-            return (Double)operadorIzq.ejecutar(ts) * (Double)operadorDer.ejecutar(ts);
-        }else if(tipo== Tipo_operacion.RESTA){
-            return (Double)operadorIzq.ejecutar(ts) - (Double)operadorDer.ejecutar(ts);
-        }else if(tipo== Tipo_operacion.SUMA){
-            return (Double)operadorIzq.ejecutar(ts) + (Double)operadorDer.ejecutar(ts);
-        }else if(tipo== Tipo_operacion.NEGATIVO){
-            return (Double)operadorIzq.ejecutar(ts) * -1;
-        
-        }
-        /* ======== OPERACIONES UNARIOS ======== */
-        else if(tipo == Tipo_operacion.NUMERO){
-            return new Double(valor.toString());
-        }else if(tipo == Tipo_operacion.IDENTIFICADOR){
-            return ts.getValor(valor.toString());
-        }else if(tipo == Tipo_operacion.CADENA){
-            return valor.toString();
-        }else if(tipo == Tipo_operacion.CARACTER){
-            return generarChar();
-        }
-        /* ======== OPERACIONES RELACIONALES ======== */
-        else if(tipo== Tipo_operacion.MAYOR_QUE){
-            return ((Double)operadorIzq.ejecutar(ts)).doubleValue()>((Double)operadorDer.ejecutar(ts)).doubleValue();
-        }else if(tipo== Tipo_operacion.MENOR_QUE){
-            return ((Double)operadorIzq.ejecutar(ts)).doubleValue()<((Double)operadorDer.ejecutar(ts)).doubleValue();
-        }else if(tipo== Tipo_operacion.CONCATENACION){
-            return operadorIzq.ejecutar(ts).toString()+operadorDer.ejecutar(ts).toString();
-        }else{
+        if(null== tipo){
             return null;
-        }
-    }
-
-    /**
-     * Metodo que obtiene un valor char del Token CARACTER
-     * @return un valor de tipo char obtenido de una cadena
-     */
-    private char generarChar()
-    {
-        String cad = this.valor.toString().substring(1, this.valor.toString().length()-1);
-        switch(cad)
-        {
-            case "\\n":
-                return '\n';
-            case "\\'":
-                return '\'';
-            case "\\\"":
-                return '\"';
-            case "\\\\":
-                return '\\';
+        }else switch (tipo) {
+            case DIVISION:
+                return (Double)operadorIzq.ejecutar(ts) / (Double)operadorDer.ejecutar(ts);
+            case MULTIPLICACION:
+                return (Double)operadorIzq.ejecutar(ts) * (Double)operadorDer.ejecutar(ts);
+            case RESTA:
+                return (Double)operadorIzq.ejecutar(ts) - (Double)operadorDer.ejecutar(ts);
+            case SUMA:
+                return (Double)operadorIzq.ejecutar(ts) + (Double)operadorDer.ejecutar(ts);
+            case NEGATIVO:
+                return (Double)operadorIzq.ejecutar(ts) * -1;
+            case NOT:
+                return !(Boolean)operadorIzq.ejecutar(ts);
+            case NUMERO:
+                return new Double(valor.toString());
+            case IDENTIFICADOR:
+                return ts.getValor(valor.toString());
+            case CADENA:
+                return valor.toString();
+            case MAYOR_QUE:
+                return ((Double)operadorIzq.ejecutar(ts)).doubleValue()>((Double)operadorDer.ejecutar(ts)).doubleValue();
+            case MENOR_QUE:
+                return ((Double)operadorIzq.ejecutar(ts)).doubleValue()<((Double)operadorDer.ejecutar(ts)).doubleValue();
+                //((int)operadorIzq.ejecutar(ts))<((int)operadorDer.ejecutar(ts));
+            case MENOR_IGUAL:
+                return ((Double)operadorIzq.ejecutar(ts)).doubleValue()<=((Double)operadorDer.ejecutar(ts)).doubleValue();
+            case MAYOR_IGUAL:
+                return ((Double)operadorIzq.ejecutar(ts)).doubleValue()>=((Double)operadorDer.ejecutar(ts)).doubleValue();
+            case IGUAL:
+                return ((Double)operadorIzq.ejecutar(ts)).doubleValue()==((Double)operadorDer.ejecutar(ts)).doubleValue();
+            case DIFERENTE:
+                return ((Double)operadorIzq.ejecutar(ts)).doubleValue()!=((Double)operadorDer.ejecutar(ts)).doubleValue();
+            case AND:
+                return (Boolean)operadorIzq.ejecutar(ts) && (Boolean)operadorDer.ejecutar(ts);
+            case OR:
+                return (Boolean)operadorIzq.ejecutar(ts) || (Boolean)operadorDer.ejecutar(ts);
+            case CONCATENACION:
+                return operadorIzq.ejecutar(ts).toString() + operadorDer.ejecutar(ts).toString();
+            case CHAR:
+                return valor.toString();
+            case ARREGLO:
+                LinkedList<Integer> l = new LinkedList<Integer>();
+                for(Operacion op : nums)
+                {
+                    double num = (double)op.ejecutar(ts);
+                    int n = (int) num;
+                    l.add(n);
+                }
+                return ts.getValor(valor.toString(),l);
+            case BOOL:
+                if(valor.toString().equals("true")){
+                    return true;
+                }
+                else{
+                    return false;
+                }
             default:
-                return cad.isEmpty() ? '\0' : cad.charAt(0);
+                return null;
         }
-    }
+    }    
 }

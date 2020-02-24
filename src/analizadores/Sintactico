@@ -1,20 +1,18 @@
-/*
- * Ejemplo desarrollado por Erick Navarro
- * Blog: e-navarro.blogspot.com
- * Septiembre - 2015
- */
+
 
 package analizadores; 
 
 import arbol.Asignacion;
 import arbol.Declaracion;
+import arbol.DeclaracionAsignacion;
 import arbol.Imprimir;
+import arbol.Imprimirln;
 import arbol.If;
+import arbol.For;
 import arbol.Instruccion;
 import arbol.Mientras;
 import arbol.Operacion;
-import arbol.Incremento;
-import arbol.Decremento;
+import arbol.IfElse;
 import arbol.Simbolo.Tipo;
 import arbol.TablaDeSimbolos;
 import java.util.LinkedList;
@@ -48,30 +46,40 @@ parser code
     }
 :} 
 
-terminal String PTCOMA,PARIZQ,PARDER,LLAVIZQ,LLAVDER;
-terminal String MAS,MENOS,POR,DIVIDIDO,CONCAT;
-terminal String INCREMENTO,DECREMENTO;
+terminal String PTCOMA,PARIZQ,PARDER,LLAVIZQ,LLAVDER,COMA,CORDER,CORIZQ;
+terminal String MAS,MENOS,POR,DIVIDIDO,CONCAT,Y,O;
 terminal String MENQUE,MAYQUE;
 terminal String ENTERO;
 terminal String DECIMAL;
-terminal String CARACTER;
 terminal String CADENA;
+terminal String BOOLEANO;
+terminal String CHARAC;
 terminal String UMENOS;
-terminal String RIMPRIMIR, RMIENTRAS,RNUMERO,RIF,RELSE,RCARACTER;
-terminal String IGUAL;
+terminal String RIMPRIMIR,RIMPRIMIRLN,RMIENTRAS,RIF,RELSE,RFOR;
+terminal String RINT,RSTRING,RBOOL,RCHAR;
+terminal String IGUAL, DIF;
 terminal String IDENTIFICADOR;
 
 non terminal ini;
 non terminal LinkedList<Instruccion> instrucciones;
 non terminal Instruccion instruccion;
+non terminal Instruccion declarasignacion;
+non terminal Instruccion ielse;
+non terminal Instruccion iif;
+non terminal Instruccion arreglos;
+non terminal LinkedList<Operacion> arr;
+non terminal String tipos;
+non terminal LinkedList<String> identificadores;
+non terminal Instruccion aumentodecremento;
 non terminal Operacion expresion_numerica;
 non terminal Operacion expresion_cadena;
 non terminal Operacion expresion_logica;
+non terminal Operacion expresion_relacional;
+non terminal Operacion expresion_caracter;
 precedence left CONCAT;
 precedence left MAS,MENOS;
 precedence left POR,DIVIDIDO;
 precedence right UMENOS; 
-precedence nonassoc INCREMENTO,DECREMENTO; 
 
 start with ini; 
 
@@ -88,17 +96,64 @@ instrucciones ::=
 ; 
 
 instruccion ::= 
-   RIMPRIMIR    PARIZQ expresion_cadena:a PARDER PTCOMA                          {:RESULT=new Imprimir(a);:}
- | RMIENTRAS    PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER {:RESULT=new Mientras(a,b);:}
- | RNUMERO      IDENTIFICADOR:a PTCOMA                                           {:RESULT=new Declaracion(a,Tipo.NUMERO);:}
- | RCARACTER    IDENTIFICADOR:a PTCOMA                                           {:RESULT=new Declaracion(a,Tipo.CARACTER);:}
- | IDENTIFICADOR:a IGUAL expresion_numerica:b PTCOMA                             {:RESULT=new Asignacion(a,b);:}
- | RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER          {:RESULT=new If(a,b);:}
- | RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER  RELSE LLAVIZQ instrucciones:c LLAVDER {:RESULT=new If(a,b,c);:}
- | IDENTIFICADOR:a INCREMENTO PTCOMA                                          {:RESULT=new Incremento(a);:}
- | IDENTIFICADOR:a DECREMENTO PTCOMA                                          {:RESULT=new Decremento(a);:}
+   RIMPRIMIR PARIZQ expresion_cadena:a PARDER PTCOMA                          {:RESULT=new Imprimir(a);:}
+ | RIMPRIMIRLN PARIZQ expresion_cadena:a PARDER PTCOMA                          {:RESULT=new Imprimirln(a);:}
+ | RMIENTRAS PARIZQ expresion_relacional:a PARDER LLAVIZQ instrucciones:b LLAVDER {:RESULT=new Mientras(a,b);:}
+ | tipos:c identificadores:a PTCOMA                                           {:RESULT=new Declaracion(a,c);:}
+ | tipos:c identificadores:a IGUAL expresion_cadena:b PTCOMA                {:RESULT=new DeclaracionAsignacion(a,c,b);:}
+ | identificadores:a IGUAL expresion_cadena:b PTCOMA                        {:RESULT=new Asignacion(a,b);:}
+ | identificadores:a arr:b IGUAL expresion_cadena:c PTCOMA {:RESULT=new Asignacion(a,b,c);:}
+ | iif:a                                                                      {:RESULT=a;:}
+ | aumentodecremento:a PTCOMA{:RESULT=a;:}
+ | RFOR PARIZQ declarasignacion:a PTCOMA expresion_relacional:b PTCOMA aumentodecremento:c PARDER LLAVIZQ instrucciones:d LLAVDER{:
+    RESULT=new For(a,b,d,c);
+    :}
+ | arreglos:a                                                                 {:RESULT=a;:}
  | error
 ;
+
+
+arreglos ::=
+   tipos:a arr:b identificadores:c  PTCOMA {:RESULT=new Declaracion(c,b,a);:}
+;
+
+arr ::=
+   arr:a CORIZQ expresion_numerica:b CORDER           {:RESULT=a; RESULT.add(b);:}
+ | CORIZQ expresion_numerica:a CORDER                 {:RESULT=new LinkedList<>(); RESULT.add(a);:}
+;
+
+tipos ::=
+   RINT:a {:RESULT=a;:}
+ | RSTRING:a {:RESULT=a;:}
+ | RBOOL:a {:RESULT=a;:}
+ | RCHAR:a {:RESULT=a;:}
+;
+
+iif ::=
+   RIF PARIZQ expresion_relacional:a PARDER LLAVIZQ instrucciones:b LLAVDER       {:RESULT=new If(a,b);:}
+ | RIF PARIZQ expresion_relacional:a PARDER LLAVIZQ instrucciones:b LLAVDER ielse:c {:RESULT=new If(a,b,c);:}
+;
+
+ielse ::=
+   RELSE LLAVIZQ instrucciones:a LLAVDER {:RESULT=new IfElse(a);:}
+ | RELSE iif:a {:RESULT=new IfElse(a);:}
+;
+
+declarasignacion ::=
+   tipos:c IDENTIFICADOR:a IGUAL expresion_numerica:b {:LinkedList<String> lista = new LinkedList<>(); lista.add(a);RESULT=new DeclaracionAsignacion(lista,c,b);:}
+ | IDENTIFICADOR:a IGUAL expresion_numerica:b {:LinkedList<String> lista = new LinkedList<>(); lista.add(a);RESULT=new Asignacion(lista,b);:}
+;
+
+identificadores ::=
+   identificadores:a COMA IDENTIFICADOR:b{:RESULT=a; RESULT.add(b);:}
+ | IDENTIFICADOR:a{:RESULT = new LinkedList<>(); RESULT.add(a);:}
+;
+
+aumentodecremento ::=
+   IDENTIFICADOR:a MAS MAS{:LinkedList<String> lista = new LinkedList<>(); lista.add(a); RESULT=new Asignacion(lista,new Operacion(new Operacion(a,Operacion.Tipo_operacion.IDENTIFICADOR),new Operacion(1.0),Operacion.Tipo_operacion.SUMA));:}
+ | IDENTIFICADOR:a MENOS MENOS{:LinkedList<String> lista = new LinkedList<>(); lista.add(a); RESULT=new Asignacion(lista,new Operacion(new Operacion(a,Operacion.Tipo_operacion.IDENTIFICADOR),new Operacion(1.0),Operacion.Tipo_operacion.RESTA));:} 
+;
+
 
 expresion_numerica  ::= 
     MENOS expresion_numerica:a                               {:RESULT=new Operacion(a,Operacion.Tipo_operacion.NEGATIVO);:}%prec UMENOS     
@@ -109,18 +164,35 @@ expresion_numerica  ::=
  |  PARIZQ expresion_numerica:a PARDER                       {:RESULT=a;:}
  |  ENTERO:a                                                 {:RESULT=new Operacion(new Double(a));:}
  |  DECIMAL:a                                                {:RESULT=new Operacion(new Double(a));:}
- |  CARACTER:a                                               {:RESULT=new Operacion(a,Operacion.Tipo_operacion.CARACTER);:} 
  |  IDENTIFICADOR: a                                         {:RESULT=new Operacion(a,Operacion.Tipo_operacion.IDENTIFICADOR);:}
-
+ |  IDENTIFICADOR:a arr:b                                    {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.ARREGLO);:}
 ;
 
 expresion_cadena::=
     expresion_cadena:a CONCAT expresion_cadena:b {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.CONCATENACION);:}
  |  CADENA:a                                     {:RESULT=new Operacion(a,Operacion.Tipo_operacion.CADENA);:}
  |  expresion_numerica:a                         {:RESULT=a;:}
+ |  expresion_caracter:a                         {:RESULT=a;:}
+ |  expresion_relacional:a                       {:RESULT=a;:}
+;
+
+expresion_caracter ::=
+   CHARAC:a                                     {:RESULT=new Operacion(a,Operacion.Tipo_operacion.CHAR);:}
 ;
 
 expresion_logica  ::= 
    expresion_numerica:a  MAYQUE   expresion_numerica:b{:RESULT=new Operacion(a,b, Operacion.Tipo_operacion.MAYOR_QUE);:} 
- | expresion_numerica:a  MENQUE   expresion_numerica:b{:RESULT=new Operacion(a,b, Operacion.Tipo_operacion.MENOR_QUE);:}  
+ | expresion_numerica:a  MENQUE   expresion_numerica:b{:RESULT=new Operacion(a,b, Operacion.Tipo_operacion.MENOR_QUE);:}
+ | expresion_numerica:a  IGUAL IGUAL   expresion_numerica:b{:RESULT=new Operacion(a,b, Operacion.Tipo_operacion.IGUAL);:}  
+ | expresion_numerica:a  DIF IGUAL   expresion_numerica:b{:RESULT=new Operacion(a,b, Operacion.Tipo_operacion.DIFERENTE);:}
+ | expresion_numerica:a  MAYQUE IGUAL   expresion_numerica:b{:RESULT=new Operacion(a,b, Operacion.Tipo_operacion.MAYOR_IGUAL);:}  
+ | expresion_numerica:a  MENQUE IGUAL   expresion_numerica:b{:RESULT=new Operacion(a,b, Operacion.Tipo_operacion.MENOR_IGUAL);:}  
 ;
+
+expresion_relacional ::=
+   expresion_logica:a Y expresion_logica:b  {:RESULT=new Operacion(a,b, Operacion.Tipo_operacion.AND);:}
+ | expresion_logica:a O expresion_logica:b  {:RESULT=new Operacion(a,b, Operacion.Tipo_operacion.OR);:}
+ | DIF expresion_logica:a {:RESULT=new Operacion(a, Operacion.Tipo_operacion.NOT);:} 
+ | expresion_logica:a {:RESULT=a;:} 
+ | BOOLEANO:a {:RESULT=new Operacion(a, Operacion.Tipo_operacion.BOOL);:}
+; 

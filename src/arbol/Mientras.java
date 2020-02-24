@@ -41,8 +41,7 @@ public class Mientras implements Instruccion{
     @Override
     public Object ejecutar(TablaDeSimbolos ts) {
         while((Boolean)condicion.ejecutar(ts)){
-            TablaDeSimbolos tablaLocal=new TablaDeSimbolos();
-            tablaLocal.addAll(ts);
+            TablaDeSimbolos tablaLocal=new TablaDeSimbolos(ts);
             for(Instruccion ins:listaInstrucciones){
                 ins.ejecutar(tablaLocal);
             }

@@ -1,17 +1,15 @@
 /*
- * Ejemplo desarrollado por Erick Navarro
- * Blog: e-navarro.blogspot.com
- * Septiembre - 2015
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
-
 package arbol;
 
 /**
- * Clase que ejecuta las acciones de una instrucción imprimir y que implementa
- * la interfaz de instrucción
- * @author Erick
+ *
+ * @author josef
  */
-public class Imprimir implements Instruccion{
+public class Imprimirln implements Instruccion{
     /**
      * Contenido que será impreso al ejecutar la instrucción imprimir, este debe
      * ser una instrucción que genere un valor al ser ejecutada.
@@ -21,7 +19,7 @@ public class Imprimir implements Instruccion{
      * Constructor de la clase imprimir
      * @param contenido contenido que será impreso al ejecutar la instrucción
      */
-    public Imprimir(Instruccion contenido) {
+    public Imprimirln(Instruccion contenido) {
         this.contenido = contenido;
     }
     /**
@@ -34,8 +32,7 @@ public class Imprimir implements Instruccion{
      */
     @Override
     public Object ejecutar(TablaDeSimbolos ts) {
-        System.out.print(contenido.ejecutar(ts).toString());
+        System.out.println(contenido.ejecutar(ts).toString());
         return null;
     }
-    
 }
