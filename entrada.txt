@@ -4,7 +4,7 @@
  * Septiembre - 2015                      *
  ******************************************/
 
-//Se imprime el encabezado
+ //Se imprime el encabezado
 imprimir("Tablas de" & " multiplicar");
 
 //Se declara la variable a, de tipo numero
@@ -24,11 +24,13 @@ imprimir("----------------");
  * dos ciclos while anidados. 
  **/
 mientras(a<4+c){	
-	a=a+1;
+	//a=a+1;
+	a++;
 	numero b;
 	b=0;
 	mientras(b<4+c){
-		b=b+1;
+		//b=b+1;
+		b++;
 		imprimir(a & " * " & b & " = " & a * b);
 	}
 	imprimir("----------------");
@@ -62,4 +64,28 @@ If(a>10){
 }else{
 	imprimir("a es menor o igual que 10.");
 }
+
+
+a = 0;
+b = 10;
+
+mientras(a < 10){
+	imprimir("incrementando variable a: " & a);
+	a++;
+}
+
+mientras(b > 0){
+	imprimir("decrementando variable b: " & b);
+	b--;
+}
+
+ // Manejo de Caracteres
+imprimir("Manejo del valor char");
+imprimir("----------------");
+imprimir("A continuaciòn viene un caracter: "&'a');
+imprimir('\n');
+caracter mi_char;
+mi_char = 'c';
+imprimir(mi_char);
+imprimir("----------------");
 
