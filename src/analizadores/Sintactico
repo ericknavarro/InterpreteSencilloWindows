@@ -65,6 +65,7 @@ non terminal ini;
 non terminal LinkedList<Instruccion> instrucciones;
 non terminal Instruccion instruccion;
 non terminal Operacion expresion_numerica;
+non terminal LinkedList<Instruccion> else_ifs;
 non terminal Operacion expresion_cadena;
 non terminal Operacion expresion_logica;
 precedence left CONCAT;
@@ -95,9 +96,15 @@ instruccion ::=
  | IDENTIFICADOR:a IGUAL expresion_numerica:b PTCOMA                             {:RESULT=new Asignacion(a,b);:}
  | RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER          {:RESULT=new If(a,b);:}
  | RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER  RELSE LLAVIZQ instrucciones:c LLAVDER {:RESULT=new If(a,b,c);:}
+ | RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER else_ifs:l {:RESULT=new If(a,b,l,null);:} 
+ | RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER else_ifs:l RELSE LLAVIZQ instrucciones:c LLAVDER {:RESULT=new If(a,b,l,c);:} 
  | IDENTIFICADOR:a INCREMENTO PTCOMA                                          {:RESULT=new Incremento(a);:}
  | IDENTIFICADOR:a DECREMENTO PTCOMA                                          {:RESULT=new Decremento(a);:}
  | error
+;
+
+else_ifs ::= else_ifs:l RELSE RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER {:RESULT= l; RESULT.add(new If(a,b));:}
+  | RELSE RIF PARIZQ expresion_logica:a PARDER LLAVIZQ instrucciones:b LLAVDER {:RESULT= new LinkedList<>(); RESULT.add(new If(a,b));:}
 ;
 
 expresion_numerica  ::= 
