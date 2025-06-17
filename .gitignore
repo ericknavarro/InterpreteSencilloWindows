@@ -1,3 +1,19 @@
-/nbproject/private/
-/build/
-/dist/
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# NetBeans
+nbproject/private/
+build/
+
+# Java build output
+out/
+*.class
+
+# System
+.DS_Store
+Thumbs.db
+
+# Logs & temp files
+*.log
+*.tmp

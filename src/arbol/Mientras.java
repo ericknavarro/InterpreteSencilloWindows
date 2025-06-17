@@ -1,6 +1,6 @@
 /*
  * Ejemplo desarrollado por Erick Navarro
- * Blog: e-navarro.blogspot.com
+ * GitHub Page: ericknavarro.github.io
  * Septiembre - 2015
  */
 
@@ -11,7 +11,7 @@ import java.util.LinkedList;
 /**
  * Clase que ejecuta las acciones de una instrucción mientras y que implementa
  * la interfaz de instrucción
- * @author Erick
+ * @author Erick Navarro
  */
 public class Mientras implements Instruccion{
     /**

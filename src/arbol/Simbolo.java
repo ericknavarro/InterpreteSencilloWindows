@@ -1,6 +1,6 @@
 /*
  * Ejemplo desarrollado por Erick Navarro
- * Blog: e-navarro.blogspot.com
+ * GitHub Page: ericknavarro.github.io
  * Septiembre - 2015
  */
 
@@ -11,7 +11,7 @@ package arbol;
  * variables con su valor, identificador y tipo, actualmente todas las variables 
  * son de tipo número, pero se colocó la variable tipo por si se quisiera ampliar
  * el lenguaje y agregar más tipos.
- * @author Erick
+ * @author Erick Navarro
  */
 public class Simbolo {
     private final Tipo tipo;

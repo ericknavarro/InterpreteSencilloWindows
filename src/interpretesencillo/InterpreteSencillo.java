@@ -1,6 +1,6 @@
 /*
  * Ejemplo desarrollado por Erick Navarro
- * Blog: e-navarro.blogspot.com
+ * GitHub Page: ericknavarro.github.io
  * Septiembre - 2015
  */
 
@@ -13,7 +13,7 @@ import java.util.LinkedList;
 
 /**
  * Clase principal de la aplicación
- * @author Erick
+ * @author Erick Navarro
  */
 public class InterpreteSencillo {
 
