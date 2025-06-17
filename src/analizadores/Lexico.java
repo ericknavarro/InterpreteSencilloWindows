@@ -1,6 +1,6 @@
 /*
  * Ejemplo desarrollado por Erick Navarro
- * Blog: e-navarro.blogspot.com
+ * GitHub Page: ericknavarro.github.io
  * Septiembre - 2015
  */
 package analizadores;

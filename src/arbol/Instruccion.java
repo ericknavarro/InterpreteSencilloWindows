@@ -1,6 +1,6 @@
 /*
  * Ejemplo desarrollado por Erick Navarro
- * Blog: e-navarro.blogspot.com
+ * GitHub Page: ericknavarro.github.io
  * Septiembre - 2015
  */
 
@@ -12,7 +12,7 @@ package arbol;
  * este caso, todas las instrucciones pueden ser ejecutadas, por lo que todas las
  * clases que implementen esta interfaz están obligadas a tener un método programado
  * para la ejecución.
- * @author Erick
+ * @author Erick Navarro
  */
 public interface Instruccion {
     /**

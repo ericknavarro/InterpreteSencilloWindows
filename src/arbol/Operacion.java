@@ -1,6 +1,6 @@
 /*
  * Ejemplo desarrollado por Erick Navarro
- * Blog: e-navarro.blogspot.com
+ * GitHub Page: ericknavarro.github.io
  * Septiembre - 2015
  */
 
@@ -10,7 +10,7 @@ package arbol;
  * Clase que ejecuta las acciones de una operación, ya sea aritmética o realacional
  * y que implementa la interfaz de instrucción, ya que estas operaciones pueden 
  * ejecutarse y al ejecutarse retornan un valor.
- * @author Erick
+ * @author Erick Navarro
  */
 public class Operacion implements Instruccion{
     /**

@@ -1,6 +1,6 @@
 /*
  * Ejemplo desarrollado por Erick Navarro
- * Blog: e-navarro.blogspot.com
+ * GitHub Page: ericknavarro.github.io
  * Septiembre - 2015
  */
 
@@ -9,7 +9,7 @@ package arbol;
 /**
  * Clase que ejecuta las acciones de una instrucción de declaración y que implementa
  * la interfaz de instrucción
- * @author Erick
+ * @author Erick Navarro
  */
 public class Declaracion implements Instruccion{
     /**
@@ -30,7 +30,7 @@ public class Declaracion implements Instruccion{
         tipo=t;
     }
     /**
-     * Método que ejecuta la accion de declarar una variable, es una sobreescritura del 
+     * Método que ejecuta la accion de declarar una variable, es una sobreescritura del
      * método ejecutar que se debe programar por la implementación de la interfaz
      * instrucción
      * @param ts Tabla de símbolos del ámbito padre.
@@ -41,5 +41,5 @@ public class Declaracion implements Instruccion{
         ts.add(new Simbolo(id,tipo));
         return null;
     }
-    
+
 }

@@ -1,37 +1,48 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Ejemplo desarrollado por Erick Navarro
+ * GitHub Page: ericknavarro.github.io
+ * Septiembre - 2015
  */
+
 package arbol;
 
 /**
+ * Clase que representa una instrucción de decremento postfijo.
+ * Implementa la interfaz Instruccion y permite disminuir en uno
+ * el valor de una variable existente en la tabla de símbolos.
+ * <p>
+ * Por ejemplo, para la instrucción: x--, se retorna el valor
+ * actual de x y luego se decrementa su valor en 1.
  *
- * @author bruno
+ * @author Bruno Coronado
  */
-public class Decremento implements Instruccion{
+public class Decremento implements Instruccion {
 
-    //Identificador de la variable que se va a decrementar.
+    /**
+     * Identificador de la variable que se va a decrementar.
+     */
     private final String id;
 
     /**
-     * Constructor de la clase Decremento
-     * @param id identificador de la variable que se va a decrementar
+     * Constructor de la clase Decremento.
+     *
+     * @param id identificador de la variable que se va a decrementar.
      */
     public Decremento(String id) {
         this.id = id;
     }
-    
+
     /**
-     * Metodo que ejecuta el decremento de una variables mediante el decremento
-     * postfijo, por lo tanto decrementa la variable en 1 y retorna el valor antiguo.
-     * @param ts tabla de símbolos del ámbito padre de la sentencia asignación.
+     * Ejecuta el decremento de una variable usando notación postfija.
+     * Decrementa en 1 el valor actual de la variable y retorna su valor previo.
+     *
+     * @param ts tabla de símbolos del ámbito actual.
      * @return el valor anterior al decremento.
      */
     @Override
     public Object ejecutar(TablaDeSimbolos ts) {
         Object tmp = ts.getValor(id.toString());
-        ts.setValor(id,((Double)tmp - 1));
+        ts.setValor(id, ((Double) tmp - 1));
         return tmp;
-    }   
+    }
 }

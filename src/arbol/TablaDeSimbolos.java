@@ -1,6 +1,6 @@
 /*
  * Ejemplo desarrollado por Erick Navarro
- * Blog: e-navarro.blogspot.com
+ * GitHub Page: ericknavarro.github.io
  * Septiembre - 2015
  */
 
@@ -12,7 +12,7 @@ import java.util.LinkedList;
  * Clase tabla de símbolos, que realiza todas las operaciones habituales de una 
  * tabla de símbolos, hereda de la clase lista enlazada porque básicamente la tabla
  * es una lista de símbolos.
- * @author Erick
+ * @author Erick Navarro
  */
 public class TablaDeSimbolos extends LinkedList<Simbolo>{
     /**
