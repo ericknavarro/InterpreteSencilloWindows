@@ -1,18 +1,22 @@
-Información general:
-* Creado por: Erick Navarro
-* Blog: e-navarro.blogspot.com
-* Medium: https://medium.com/@ericknavarro
-* Julio - 2018
+# Proyecto de Análisis Léxico y Sintáctico
 
-Herramientas utilizadas:
-* JAVA (Lenguaje de programación) (Java(TM) SE Runtime Environment (build 1.8.0_05-b13))
-* Netbeans 8.2 (IDE)
-* Windows 10 (Sistema operativo)
-* CUP v0.11a beta 20060608 (Generador de analizadores sintácticos)
-* JLEX 1.2.6-7 (Generador de analizadores léxicos) 
+**Creado por:** Erick Navarro  
+**GitHub Page:** [ericknavarro.github.io](https://ericknavarro.github.io)  
+**LinkedIn:** [Erick Navarro](https://www.linkedin.com/in/ericknd/)  
+**Fecha:** Julio - 2018
 
-Otras notas:
-Los archivos de JLEX y CUP se encuentran en la carpeta del paquete 
-analizadores, así como el archivo con extensión BAT, que se utiliza 
-para compilar los archivos JLEX y CUP y generar el analizador léxico 
-y el sintáctico. 
+---
+
+## Herramientas utilizadas
+
+- **Java:** Java(TM) SE Runtime Environment (build 1.8.0_05-b13)
+- **IDE:** NetBeans 8.2
+- **Sistema operativo:** Windows 10
+- **Generador sintáctico:** CUP v0.11a beta 20060608
+- **Generador léxico:** JLEX 1.2.6-7
+
+---
+
+## Otras notas
+
+Los archivos de JLEX y CUP se encuentran en la carpeta del paquete `analizadores`, junto con un archivo `.bat` que compila automáticamente ambos analizadores y genera los componentes léxico y sintáctico.
