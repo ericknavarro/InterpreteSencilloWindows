@@ -67,9 +67,9 @@ If(a>10){
 
 
 a = 0;
-b = 10;
+b = 3;
 
-mientras(a < 10){
+mientras(a < 3){
 	imprimir("incrementando variable a: " & a);
 	a++;
 }
@@ -82,10 +82,9 @@ mientras(b > 0){
  // Manejo de Caracteres
 imprimir("Manejo del valor char");
 imprimir("----------------");
-imprimir("A continuaciòn viene un caracter: "&'a');
-imprimir('\n');
+imprimir("A continuación viene un caracter: "&'a');
 caracter mi_char;
 mi_char = 'c';
-imprimir(mi_char);
+imprimir("A continuación viene un caracter: "&mi_char);
 imprimir("----------------");
 
